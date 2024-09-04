@@ -1,0 +1,88 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th>Method</th>
+            <th>Purpose</th>
+            <th>Typical Status Codes</th>
+            <th>Description</th>
+            <th>Idempotent</th>
+            <th>Typical Use Case</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>GET</td>
+            <td>Retrieve or fetch data from the server</td>
+            <td>200 OK, 204 No Content, 404 Not Found</td>
+            <td>
+                <ul>
+                    <li><strong>200 OK</strong>: Request succeeded, and the resource is returned.</li>
+                    <li><strong>204 No Content</strong>: Request succeeded, but no content to return.</li>
+                    <li><strong>404 Not Found</strong>: Resource does not exist.</li>
+                </ul>
+            </td>
+            <td>Yes</td>
+            <td>Fetching resource details, querying data</td>
+        </tr>
+        <tr>
+            <td>POST</td>
+            <td>Submit data to create or process a resource</td>
+            <td>201 Created, 200 OK, 400 Bad Request, 409 Conflict</td>
+            <td>
+                <ul>
+                    <li><strong>201 Created</strong>: A new resource was created.</li>
+                    <li><strong>200 OK</strong>: Request succeeded, and some response is returned.</li>
+                    <li><strong>400 Bad Request</strong>: Request is malformed or invalid.</li>
+                    <li><strong>409 Conflict</strong>: Conflict with the current state of the resource.</li>
+                </ul>
+            </td>
+            <td>No</td>
+            <td>Creating new resources, submitting forms</td>
+        </tr>
+        <tr>
+            <td>PUT</td>
+            <td>Update or replace an existing resource</td>
+            <td>200 OK, 204 No Content, 400 Bad Request, 404 Not Found</td>
+            <td>
+                <ul>
+                    <li><strong>200 OK</strong>: Resource was updated successfully.</li>
+                    <li><strong>204 No Content</strong>: Request succeeded, but no content to return.</li>
+                    <li><strong>400 Bad Request</strong>: Request is malformed.</li>
+                    <li><strong>404 Not Found</strong>: Resource to update does not exist.</li>
+                </ul>
+            </td>
+            <td>Yes</td>
+            <td>Replacing or updating a resource entirely</td>
+        </tr>
+        <tr>
+            <td>DELETE</td>
+            <td>Remove a resource from the server</td>
+            <td>200 OK, 204 No Content, 404 Not Found, 409 Conflict</td>
+            <td>
+                <ul>
+                    <li><strong>200 OK</strong>: Resource was deleted.</li>
+                    <li><strong>204 No Content</strong>: Request succeeded, but no content to return.</li>
+                    <li><strong>404 Not Found</strong>: Resource to delete does not exist.</li>
+                    <li><strong>409 Conflict</strong>: Conflict with the current state of the resource.</li>
+                </ul>
+            </td>
+            <td>Yes</td>
+            <td>Deleting a resource</td>
+        </tr>
+        <tr>
+            <td>PATCH</td>
+            <td>Apply partial updates to an existing resource</td>
+            <td>200 OK, 204 No Content, 400 Bad Request, 404 Not Found</td>
+            <td>
+                <ul>
+                    <li><strong>200 OK</strong>: Resource was partially updated.</li>
+                    <li><strong>204 No Content</strong>: Request succeeded, but no content to return.</li>
+                    <li><strong>400 Bad Request</strong>: Request is malformed.</li>
+                    <li><strong>404 Not Found</strong>: Resource to update does not exist.</li>
+                </ul>
+            </td>
+            <td>Not necessarily</td>
+            <td>Partial updates to a resource</td>
+        </tr>
+    </tbody>
+</table>
