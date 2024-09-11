@@ -114,25 +114,28 @@
 
         <section>
             <h2>JDBC API vs Spring Data JDBC</h2>
-            <p>Both JDBC API and Spring Data JDBC are used to interact with relational databases in Java, but they serve different purposes and levels of abstraction. Let's compare them to highlight the key differences:</p>
+            <p>Both JDBC API and Spring Data JDBC are used to interact with relational databases in Java, but they serve
+                different purposes and levels of abstraction. Let's compare them to highlight the key differences:</p>
 
             <h3>1. What They Are:</h3>
 
             <h4>JDBC API:</h4>
             <p>
-                The Java Database Connectivity (JDBC) API is a low-level standard Java API provided by Oracle (Java SE) 
-                to allow interaction with databases. It gives you fine-grained control over database operations such as 
-                creating connections, executing SQL queries, handling ResultSet, and managing transactions. Direct 
-                interaction with SQL is required, and the developer is responsible for managing resources like 
+                The Java Database Connectivity (JDBC) API is a low-level standard Java API provided by Oracle (Java SE)
+                to allow interaction with databases. It gives you fine-grained control over database operations such as
+                creating connections, executing SQL queries, handling ResultSet, and managing transactions. Direct
+                interaction with SQL is required, and the developer is responsible for managing resources like
                 connections, statements, and result sets.
             </p>
 
             <h4>Spring Data JDBC:</h4>
             <p>
-                Spring Data JDBC is a part of the Spring Data family and offers a higher-level abstraction over the JDBC 
-                API. It simplifies database operations, particularly CRUD (Create, Read, Update, Delete), without the 
-                overhead of an Object Relational Mapper (ORM) like Hibernate. It uses Domain-Driven Design (DDD) principles 
-                and handles the mapping of database tables to Java objects (entities) automatically. It offers repositories 
+                Spring Data JDBC is a part of the Spring Data family and offers a higher-level abstraction over the JDBC
+                API. It simplifies database operations, particularly CRUD (Create, Read, Update, Delete), without the
+                overhead of an Object Relational Mapper (ORM) like Hibernate. It uses Domain-Driven Design (DDD)
+                principles
+                and handles the mapping of database tables to Java objects (entities) automatically. It offers
+                repositories
                 and entities without complex features like lazy loading or caching that come with ORM frameworks.
             </p>
 
@@ -140,15 +143,18 @@
 
             <h4>JDBC API:</h4>
             <p>
-                It operates at a low level, meaning you must manage everything manually: SQL queries, connection handling, 
-                exception management, and converting between ResultSet and Java objects. Fine-grained control over database 
+                It operates at a low level, meaning you must manage everything manually: SQL queries, connection
+                handling,
+                exception management, and converting between ResultSet and Java objects. Fine-grained control over
+                database
                 operations, which can be both an advantage and a disadvantage depending on the complexity.
             </p>
 
             <h4>Spring Data JDBC:</h4>
             <p>
-                Operates at a higher level of abstraction. You focus on defining your data model (entities) and repository 
-                interfaces, while the framework handles SQL generation, execution, and result mapping. Less control over 
+                Operates at a higher level of abstraction. You focus on defining your data model (entities) and
+                repository
+                interfaces, while the framework handles SQL generation, execution, and result mapping. Less control over
                 SQL but simplifies development and makes code more maintainable for common operations.
             </p>
 
@@ -156,8 +162,8 @@
 
             <h4>JDBC API:</h4>
             <p>
-                Developers write raw SQL queries manually and execute them directly through JDBC. Full control over the 
-                structure of the SQL, which is beneficial for complex queries or performance tuning, but more effort is 
+                Developers write raw SQL queries manually and execute them directly through JDBC. Full control over the
+                structure of the SQL, which is beneficial for complex queries or performance tuning, but more effort is
                 required.
             </p>
             <p>Example:</p>
@@ -172,8 +178,10 @@ ResultSet rs = stmt.executeQuery();
 
             <h4>Spring Data JDBC:</h4>
             <p>
-                For basic CRUD operations, Spring Data JDBC automatically generates SQL queries using repositories. Custom 
-                queries can be added using annotations or native SQL when needed. SQL is usually not written directly unless 
+                For basic CRUD operations, Spring Data JDBC automatically generates SQL queries using repositories.
+                Custom
+                queries can be added using annotations or native SQL when needed. SQL is usually not written directly
+                unless
                 required for custom operations.
             </p>
             <p>Example:</p>
@@ -190,8 +198,10 @@ public interface UserRepository extends CrudRepository&lt;User, Long&gt; {
 
             <h4>JDBC API:</h4>
             <p>
-                Manual resource management is required, including opening and closing connections, statements, and result 
-                sets. The developer is responsible for ensuring that resources are properly closed to prevent memory leaks.
+                Manual resource management is required, including opening and closing connections, statements, and
+                result
+                sets. The developer is responsible for ensuring that resources are properly closed to prevent memory
+                leaks.
             </p>
             <p>Example:</p>
             <pre>
@@ -215,7 +225,8 @@ try {
 
             <h4>Spring Data JDBC:</h4>
             <p>
-                Resource management is handled automatically by Spring’s JdbcTemplate or by the framework itself. Connections 
+                Resource management is handled automatically by Spring’s JdbcTemplate or by the framework itself.
+                Connections
                 are opened and closed internally, making code cleaner and more efficient.
             </p>
             <p>Example:</p>
@@ -229,7 +240,8 @@ List&lt;User&gt; users = userRepository.findAll();
 
             <h4>JDBC API:</h4>
             <p>
-                Transaction management is manual. You must begin, commit, or rollback transactions in your code. This gives 
+                Transaction management is manual. You must begin, commit, or rollback transactions in your code. This
+                gives
                 you fine control but adds complexity and the risk of errors (e.g., forgetting to close a transaction).
             </p>
             <p>Example:</p>
@@ -249,8 +261,9 @@ try {
 
             <h4>Spring Data JDBC:</h4>
             <p>
-                Spring Data JDBC integrates with Spring’s transaction management. You can annotate methods with 
-                <code>@Transactional</code>, and the framework manages the transaction lifecycle (begin, commit, rollback).
+                Spring Data JDBC integrates with Spring’s transaction management. You can annotate methods with
+                <code>@Transactional</code>, and the framework manages the transaction lifecycle (begin, commit,
+                rollback).
             </p>
             <p>Example:</p>
             <pre>
@@ -266,7 +279,8 @@ public void saveUser(User user) {
 
             <h4>JDBC API:</h4>
             <p>
-                Mapping between ResultSet and Java objects must be done manually using a RowMapper or similar. This involves 
+                Mapping between ResultSet and Java objects must be done manually using a RowMapper or similar. This
+                involves
                 manually extracting data from the ResultSet and populating Java objects.
             </p>
             <p>Example:</p>
@@ -280,7 +294,8 @@ user.setName(rs.getString("name"));
 
             <h4>Spring Data JDBC:</h4>
             <p>
-                It automatically maps database tables to Java objects using entities and repositories. No need to manually 
+                It automatically maps database tables to Java objects using entities and repositories. No need to
+                manually
                 handle ResultSet unless custom mappings are required.
             </p>
             <p>Example:</p>
@@ -299,14 +314,16 @@ public class User {
 
             <h4>JDBC API:</h4>
             <p>
-                Higher complexity, requiring you to handle every detail of database interaction, from query writing to 
+                Higher complexity, requiring you to handle every detail of database interaction, from query writing to
                 resource management. Suitable for situations where performance and full control over SQL are necessary.
             </p>
 
             <h4>Spring Data JDBC:</h4>
             <p>
-                Lower complexity, with an easier development model. You only need to define entities and repositories, while 
-                Spring generates SQL for you. Suitable for applications where ease of development, maintainability, and quick 
+                Lower complexity, with an easier development model. You only need to define entities and repositories,
+                while
+                Spring generates SQL for you. Suitable for applications where ease of development, maintainability, and
+                quick
                 setup are important, especially for typical CRUD operations.
             </p>
 
@@ -315,7 +332,8 @@ public class User {
             <h4>JDBC API:</h4>
             <ul>
                 <li>You need fine-grained control over SQL queries and transaction management.</li>
-                <li>You are working on performance-critical applications where custom SQL optimizations are required.</li>
+                <li>You are working on performance-critical applications where custom SQL optimizations are required.
+                </li>
                 <li>You have complex queries or require non-standard SQL features.</li>
             </ul>
 
@@ -323,10 +341,19 @@ public class User {
             <ul>
                 <li>You need rapid development with typical CRUD operations and don’t want to write SQL manually.</li>
                 <li>You prefer cleaner, more maintainable code with less boilerplate.</li>
-                <li>You don’t need the complexity of ORM (Hibernate) but still want automated mapping between database 
+                <li>You don’t need the complexity of ORM (Hibernate) but still want automated mapping between database
                     tables and Java objects.</li>
                 <li>You want built-in transaction management and easier resource handling.</li>
+                <div>
+                    <p>click here :
+                        <a href="CRUD Strategies.html">curd strategies</a> |
+                        <a href="Configuration.html">configuration</a> |
+                        <a href="ResponseEntity.html">ResponseEntity</a>
+                    </p>
+                </div>
             </ul>
+
+
         </section>
     </main>
 </body>
