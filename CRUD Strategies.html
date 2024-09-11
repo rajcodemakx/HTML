@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='springjdbc.css'>
+</head>
+
+<body>
+    <header>
+        <h1>Spring Data JDBC</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Multiple Approaches to Perform CRUD Operations in Spring Data JDBC</h2>
+            <ul>
+                <li>CrudRepository</li>
+                <li>JdbcTemplate</li>
+                <li>@Query Annotation</li>
+                <li>Programmatically Using SimpleJdbcInsert and SimpleJdbcCall</li>
+            </ul>
+        </section>
+        <section>
+            <h2>CrudRepository</h2>
+            <p>Spring Data JDBC provides the CrudRepository interface, which automatically implements basic CRUD
+                operations for your entity. <br>
+                CrudRepository is the simplest and most common way to handle CRUD operations in Spring Data JDBC. <br>It
+                provides built-in methods for basic operations such as <i>create, read, update, and delete </i> without
+                writing
+                SQL queries.</p>
+
+            <h4>Key Methods in CrudRepository</h4>
+            <ul>
+                <li><strong> save(S entity) </strong>- Saves a given entity (Create/Update).</li>
+                <li><strong>findById(ID id)</strong> - Retrieves an entity by its ID (Read).</li>
+                <li><strong>findAll()</strong> - Retrieves all entities (Read).</li>
+                <li><strong>deleteById(ID id)</strong> - Deletes an entity by its ID (Delete).</li>
+                <li><strong>deleteAll()</strong> - Deletes all entities.</li>
+            </ul>
+
+            <pre>
+                <h3> CURD OPERATIONS </h3>
+                <code>
+                    package com.todo.curdRepo;
+
+                    import java.util.List;
+                    import org.springframework.beans.factory.annotation.Autowired;
+                    import org.springframework.http.HttpStatus;
+                    import org.springframework.http.ResponseEntity;
+                    import org.springframework.web.bind.annotation.GetMapping;
+                    import org.springframework.web.bind.annotation.PathVariable;
+                    import org.springframework.web.bind.annotation.PostMapping;
+                    import org.springframework.web.bind.annotation.RequestBody;
+                    import org.springframework.web.bind.annotation.RestController;
+                    
+                    @RestController
+                    public class CURDRepoController {
+                    
+                        @Autowired
+                        private CURDRepoService curdRepoService;
+                    
+                        @GetMapping("/api/class")
+                        public ResponseEntity<List<Class>> getclassAll() {
+                            return ResponseEntity.ok(curdRepoService.getAllclasses());
+                        }
+                    
+                        @GetMapping("/api/books")
+                        public ResponseEntity<List<Book>> getbookEntity() {
+                            return ResponseEntity.ok(curdRepoService.getBooks());
+                        }
+                    
+                        @PostMapping("/api/book/save")
+                        public ResponseEntity<Book> createBook(@RequestBody Book book) {
+                            Book createdBook = curdRepoService.save(book);
+                            return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
+                        }
+                    
+                        @GetMapping("/api/book/delete/{id}")
+                        public ResponseEntity<Book> deleteBook(@PathVariable(name = "id") String id) {
+                            try {
+                                curdRepoService.deleteById(id);
+                                return ResponseEntity.noContent().build();
+                            } catch (Exception e) {
+                                return ResponseEntity.notFound().build();
+                            }
+                        }
+                    }
+                    
+                </code>
+                <code>
+                    @Service
+                    public class CURDRepoService {
+                    
+                        @Autowired
+                        private ClassRepository classRepository;
+                    
+                        @Autowired
+                        private BookRepository bookRepository;
+                    
+                        public List<Class> getAllclasses() {
+                            List<Class> classes = new ArrayList<>();
+                    
+                            Iterable<Class> classList = classRepository.findAll();
+                            /* classList.forEach(classes::add); */
+                            for (Class class1 : classList) {
+                                classes.add(class1);
+                            }
+                            return classes;
+                    
+                        }
+                    
+                        // getAll
+                        public List<Book> getBooks() {
+                            List<Book> bookList = new ArrayList<>();
+                            Iterable<Book> bookIterable = bookRepository.findAll();
+                            long count = bookRepository.count();
+                            System.out.println(count);
+                            bookIterable.forEach(bookList::add);
+                            return bookList;
+                        }
+                    
+                        // create (save)/update
+                        public Book save(Book book) {
+                    
+                            // create
+                            if (book.getId() == 0) {
+                                book.setCreatedAtTimestamp(Timestamp.from(Instant.now()));
+                                Book createBook = bookRepository.save(book);
+                                return createBook;
+                            } else {
+                                // update
+                                book.setUpdatedAtTimestamp(Timestamp.from(Instant.now()));
+                                Book updateBook = bookRepository.save(book);
+                                return updateBook;
+                            }
+                    
+                        }
+                    
+                        public void deleteById(String id) {
+                            Book bookId = bookRepository.findById(String.valueOf(id)).get();
+                            if (bookId.getId() != 0)
+                                bookRepository.deleteById(String.valueOf(id));
+                        }
+                    
+                        // Delete
+                    
+                    }
+                    
+                </code>
+                <code>
+                    
+                    package com.todo.curdRepo;
+
+                    import org.springframework.data.repository.CrudRepository;
+                    import org.springframework.stereotype.Repository;
+                    
+                    @Repository
+                    public interface BookRepository extends CrudRepository<Book, String> {
+                    
+                    }
+                    
+                </code>
+                <code>
+                    package com.todo.curdRepo;
+
+                    import java.sql.Timestamp;
+                    
+                    import org.springframework.data.annotation.Id;
+                    import org.springframework.data.relational.core.mapping.Column;
+                    import org.springframework.data.relational.core.mapping.Table;
+                    
+                    import lombok.Data;
+                    
+                    @Data
+                    @Table(value = "books")
+                    public class Book {
+                    
+                        
+                        @Id
+                        private int id;
+                        private String author;
+                        private String title;
+                        private int publicationYear;
+                        private String genre;
+                        private String isbn;
+                        private int pages;
+                        private String language;
+                        @Column(value = "created_at")
+                        private Timestamp createdAtTimestamp;
+                        @Column(value = "updated_at")
+                        private Timestamp updatedAtTimestamp;
+                    
+                    }
+                    
+                </code>
+            </pre>
+        </section>
+    </main>
+</body>
+
+</html>
