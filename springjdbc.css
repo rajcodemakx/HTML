@@ -1,15 +1,16 @@
 /* General styles */
 body {
-    font-family: "Roboto", system-ui;;
+    font-family: "Roboto", system-ui;
+    ;
     line-height: 1.6;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
-    
+
 }
 
 header {
-    background:green;
+    background: green;
     font-variant: small-caps;
     color: #fff;
     padding: 15px 0;
@@ -36,7 +37,8 @@ section {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h2, h3 {
+h2,
+h3 {
     color: #333;
 }
 
@@ -67,4 +69,15 @@ p {
 
 strong {
     color: #333;
+}
+
+div {
+    color: black;  
+    font-size: 17pt; 
+    font-variant: small-caps; 
+    text-decoration: dotted; 
+    display: inline-block; 
+    padding: 5px;
+    text-align: center; 
+    background-position: center;
 }
