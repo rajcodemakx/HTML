@@ -16,12 +16,305 @@
     <main>
         <section>
             <h2>ResponseEntity</h2>
-            <p>ResponseEntity is a class in Spring Framework used to represent an HTTP response, including status code,
+            <p>
+                ResponseEntity is a class in the Spring Framework used to represent an HTTP response, including the
+                status code,
                 headers, and body. It provides a more flexible way to build and customize HTTP responses compared to
-                simply returning data from a controller method.
+                simply
+                returning data from a controller method.
             </p>
-            
+            Here’s a point-by-point explanation: <br>
+
+            <b>Definition:</b>
+            <p>
+                ResponseEntity is part of the <code>org.springframework.http</code> package. It represents the entire
+                HTTP response,
+                including the status code, headers, and body.
+            </p>
+
+            <b>Constructors:</b>
+            <p>
+            <ul>
+                <li><strong>ResponseEntity():</strong> Constructs an empty ResponseEntity.</li>
+                <li><strong>ResponseEntity(T body, HttpStatus status):</strong> Constructs a ResponseEntity with the
+                    given body and status code.</li>
+                <li><strong>ResponseEntity(HttpStatus status):</strong> Constructs a ResponseEntity with the given
+                    status code and no body.</li>
+                <li><strong>ResponseEntity(T body, HttpHeaders headers, HttpStatus status):</strong> Constructs a
+                    ResponseEntity with the given body, headers, and status code.</li>
+            </ul>
+            </p>
+
+            <b>Status Code:</b>
+            <p>
+                You can set the HTTP status code (e.g., 200 OK, 404 Not Found) using <code>HttpStatus</code> enums. This
+                allows you
+                to control the status of the HTTP response returned by your controller.
+            </p>
+
+            <b>Headers:</b>
+            <p>
+                ResponseEntity allows you to add HTTP headers to the response. This is done using the
+                <code>HttpHeaders</code> class,
+                which lets you set various types of headers (e.g., Content-Type, Authorization).
+            </p>
+
+            <b>Body:</b>
+            <p>
+                The body of the ResponseEntity can be any Java object. Spring automatically serializes this object into
+                JSON or XML
+                based on the content type of the request.
+            </p>
+
+            <b>Usage in Controller:</b>
+            <p>
+                In a Spring MVC controller, you can return ResponseEntity from methods to build and customize responses:
+            </p>
+
+            <pre>
+                <code>
+                    @GetMapping("/example")
+                    public ResponseEntity<String> getExample() {
+                        return new ResponseEntity<>("Hello, World!", HttpStatus.OK);
+                    }
+                </code>
+            </pre>
+
+            <b>Builder Pattern:</b>
+            <p>
+                ResponseEntity provides a builder pattern through <code>ResponseEntity.BodyBuilder</code>, allowing for
+                more fluent
+                and flexible response creation:
+            </p>
+
+            <pre>
+                <code>
+                    return ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .header(HttpHeaders.LOCATION, "/example/1")
+                        .body("Resource created");
+                </code>
+            </pre>
+
+            <b>Handling Errors:</b>
+            <p>
+                You can use ResponseEntity to return error responses with appropriate status codes and messages:
+            </p>
+
+            <pre>
+                <code>
+                    @ExceptionHandler(MyException.class)
+                    public ResponseEntity<String> handleMyException(MyException ex) {
+                        return ResponseEntity
+                            .status(HttpStatus.BAD_REQUEST)
+                            .body("Error: " + ex.getMessage());
+                    }
+                </code>
+            </pre>
         </section>
+
+        <section>
+            <h2>Spring Boot Application Demonstrating HTTP Methods</h2>
+            <p>
+                This example demonstrates the use of different HTTP methods in a RESTful API using Spring Boot. It
+                includes a simple
+                service for managing a collection of books. Each method in the application corresponds to a specific
+                HTTP method
+                and status codes.
+            </p>
+
+            <h3>Spring Boot Application</h3>
+
+            <b>1. Book Entity</b>
+            <pre><code>
+                package com.example.bookstore.model;
+        
+                import javax.persistence.Entity;
+                import javax.persistence.Id;
+                import javax.validation.constraints.NotNull;
+        
+                @Entity
+                public class Book {
+        
+                    @Id
+                    private String id;
+        
+                    @NotNull
+                    private String title;
+        
+                    private String author;
+        
+                    // Getters and Setters
+                }
+            </code></pre>
+
+            <b>2. Book Repository</b>
+            <pre><code>
+                package com.example.bookstore.repository;
+        
+                import com.example.bookstore.model.Book;
+                import org.springframework.data.repository.CrudRepository;
+        
+                public interface BookRepository extends CrudRepository<Book, String> {
+                }
+            </code></pre>
+
+            <b>3. Book Controller</b>
+            <pre><code>
+                package com.example.bookstore.controller;
+        
+                import com.example.bookstore.model.Book;
+                import com.example.bookstore.repository.BookRepository;
+                import org.springframework.http.HttpStatus;
+                import org.springframework.http.ResponseEntity;
+                import org.springframework.web.bind.annotation.*;
+        
+                import java.util.Optional;
+        
+                @RestController
+                @RequestMapping("/books")
+                public class BookController {
+        
+                    private final BookRepository bookRepository;
+        
+                    public BookController(BookRepository bookRepository) {
+                        this.bookRepository = bookRepository;
+                    }
+        
+                    // GET /books/{id}
+                    @GetMapping("/{id}")
+                    public ResponseEntity<Book> getBook(@PathVariable String id) {
+                        Optional<Book> book = bookRepository.findById(id);
+                        return book.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                    }
+        
+                    // POST /books
+                    @PostMapping
+                    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+                        if (bookRepository.existsById(book.getId())) {
+                            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                        }
+                        Book savedBook = bookRepository.save(book);
+                        return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
+                    }
+        
+                    // PUT /books/{id}
+                    @PutMapping("/{id}")
+                    public ResponseEntity<Book> updateBook(@PathVariable String id, @RequestBody Book book) {
+                        if (!bookRepository.existsById(id)) {
+                            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                        }
+                        book.setId(id);
+                        Book updatedBook = bookRepository.save(book);
+                        return ResponseEntity.ok(updatedBook);
+                    }
+        
+                    // DELETE /books/{id}
+                    @DeleteMapping("/{id}")
+                    public ResponseEntity<Void> deleteBook(@PathVariable String id) {
+                        if (!bookRepository.existsById(id)) {
+                            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                        }
+                        bookRepository.deleteById(id);
+                        return ResponseEntity.noContent().build();
+                    }
+        
+                    // PATCH /books/{id}
+                    @PatchMapping("/{id}")
+                    public ResponseEntity<Book> patchBook(@PathVariable String id, @RequestBody Book book) {
+                        Optional<Book> existingBookOpt = bookRepository.findById(id);
+                        if (existingBookOpt.isEmpty()) {
+                            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                        }
+                        Book existingBook = existingBookOpt.get();
+                        if (book.getTitle() != null) existingBook.setTitle(book.getTitle());
+                        if (book.getAuthor() != null) existingBook.setAuthor(book.getAuthor());
+                        Book updatedBook = bookRepository.save(existingBook);
+                        return ResponseEntity.ok(updatedBook);
+                    }
+                }
+            </code></pre>
+
+            <h3>Explanation</h3>
+            <ul>
+                <li><b>GET /books/{id}:</b>
+                    <ul>
+                        <li><b>Purpose:</b> Retrieve a book by its ID.</li>
+                        <li><b>Typical Status Codes:</b>
+                            <ul>
+                                <li>200 OK: Book found and returned.</li>
+                                <li>404 Not Found: Book does not exist.</li>
+                            </ul>
+                        </li>
+                        <li><b>Idempotent:</b> Yes.</li>
+                        <li><b>Typical Use Case:</b> Fetching the details of a specific book.</li>
+                    </ul>
+                </li>
+                <li><b>POST /books:</b>
+                    <ul>
+                        <li><b>Purpose:</b> Create a new book.</li>
+                        <li><b>Typical Status Codes:</b>
+                            <ul>
+                                <li>201 Created: Book created successfully.</li>
+                                <li>400 Bad Request: Malformed request.</li>
+                                <li>409 Conflict: Book with the same ID already exists.</li>
+                            </ul>
+                        </li>
+                        <li><b>Idempotent:</b> No.</li>
+                        <li><b>Typical Use Case:</b> Adding a new book to the collection.</li>
+                    </ul>
+                </li>
+                <li><b>PUT /books/{id}:</b>
+                    <ul>
+                        <li><b>Purpose:</b> Replace or update a book by its ID.</li>
+                        <li><b>Typical Status Codes:</b>
+                            <ul>
+                                <li>200 OK: Book updated successfully.</li>
+                                <li>204 No Content: Successful update with no content to return.</li>
+                                <li>404 Not Found: Book does not exist.</li>
+                            </ul>
+                        </li>
+                        <li><b>Idempotent:</b> Yes.</li>
+                        <li><b>Typical Use Case:</b> Replacing or updating a book entirely.</li>
+                    </ul>
+                </li>
+                <li><b>DELETE /books/{id}:</b>
+                    <ul>
+                        <li><b>Purpose:</b> Delete a book by its ID.</li>
+                        <li><b>Typical Status Codes:</b>
+                            <ul>
+                                <li>200 OK: Book deleted successfully.</li>
+                                <li>204 No Content: Successful deletion with no content to return.</li>
+                                <li>404 Not Found: Book does not exist.</li>
+                            </ul>
+                        </li>
+                        <li><b>Idempotent:</b> Yes.</li>
+                        <li><b>Typical Use Case:</b> Removing a book from the collection.</li>
+                    </ul>
+                </li>
+                <li><b>PATCH /books/{id}:</b>
+                    <ul>
+                        <li><b>Purpose:</b> Apply partial updates to a book.</li>
+                        <li><b>Typical Status Codes:</b>
+                            <ul>
+                                <li>200 OK: Book partially updated.</li>
+                                <li>204 No Content: Successful update with no content to return.</li>
+                                <li>404 Not Found: Book does not exist.</li>
+                            </ul>
+                        </li>
+                        <li><b>Idempotent:</b> Not necessarily.</li>
+                        <li><b>Typical Use Case:</b> Updating some fields of a book without affecting others.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p>
+                This example demonstrates how you can implement CRUD operations and partial updates for a resource using
+                different
+                HTTP methods, each serving specific purposes and following RESTful principles.
+            </p>
+        </section>
+
     </main>
 </body>
 
