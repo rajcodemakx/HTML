@@ -71,7 +71,7 @@
                 In a Spring MVC controller, you can return ResponseEntity from methods to build and customize responses:
             </p>
 
-            <pre>
+            <pre style="background-color: #f4f4f4; border: 1px solid #ddd; border-radius: 4px; padding: 10px; overflow-x: auto;">
                 <code>
                     @GetMapping("/example")
                     public ResponseEntity<String> getExample() {
@@ -87,7 +87,7 @@
                 and flexible response creation:
             </p>
 
-            <pre>
+            <pre style="background-color: #f4f4f4; border: 1px solid #ddd; border-radius: 4px; padding: 10px; overflow-x: auto;">
                 <code>
                     return ResponseEntity
                         .status(HttpStatus.CREATED)
@@ -101,7 +101,7 @@
                 You can use ResponseEntity to return error responses with appropriate status codes and messages:
             </p>
 
-            <pre>
+            <pre style="background-color: #f4f4f4; border: 1px solid #ddd; border-radius: 4px; padding: 10px; overflow-x: auto;">
                 <code>
                     @ExceptionHandler(MyException.class)
                     public ResponseEntity<String> handleMyException(MyException ex) {
@@ -126,7 +126,7 @@
             <h3>Spring Boot Application</h3>
 
             <b>1. Book Entity</b>
-            <pre><code>
+            <pre style="background-color: #f4f4f4; border: 1px solid #ddd; border-radius: 4px; padding: 10px; overflow-x: auto;"><code>
                 package com.example.bookstore.model;
         
                 import javax.persistence.Entity;
@@ -149,7 +149,7 @@
             </code></pre>
 
             <b>2. Book Repository</b>
-            <pre><code>
+            <pre  style="background-color: #f4f4f4; border: 1px solid #ddd; border-radius: 4px; padding: 10px; overflow-x: auto;"><code>
                 package com.example.bookstore.repository;
         
                 import com.example.bookstore.model.Book;
@@ -160,7 +160,7 @@
             </code></pre>
 
             <b>3. Book Controller</b>
-            <pre><code>
+            <pre style="background-color: #f4f4f4; border: 1px solid #ddd; border-radius: 4px; padding: 10px; overflow-x: auto;"><code>
                 package com.example.bookstore.controller;
         
                 import com.example.bookstore.model.Book;
