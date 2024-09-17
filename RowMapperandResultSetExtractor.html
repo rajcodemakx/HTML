@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RowMapper and ResultSetExtractor</title>
+    <link rel="stylesheet" href="springjdbc.css">
+</head>
+
+<body>
+    <header>
+        <h1>RowMapper and ResultSetExtractor</h1>
+    </header>
+    <main>
+        <section>
+            <h2>5. RowMapper and ResultSetExtractor</h2>
+
+            <h3>Mapping Database Rows to Java Objects using <code>RowMapper</code></h3>
+            <p><strong>RowMapper</strong> is a functional interface in Spring that helps in mapping rows from a SQL
+                result set to Java objects. It simplifies the process of converting data from the database into
+                meaningful objects in your Java application.</p>
+            <ul>
+                <li>It is typically used in conjunction with the <code>query()</code> method of
+                    <strong>JdbcTemplate</strong>.
+                </li>
+                <li>Each row in the result set is mapped to a Java object, usually a POJO (Plain Old Java Object).</li>
+            </ul>
+            <p><strong>Example:</strong></p>
+
+            <pre>
+                    <code>
+                        <b>
+                    String sql = "SELECT id, name, age FROM users";
+                    List&lt;User&gt; users = jdbcTemplate.query(sql, new RowMapper&lt;User&gt;() {
+                        @Override
+                        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            User user = new User();
+                            user.setId(rs.getInt("id"));
+                            user.setName(rs.getString("name"));
+                            user.setAge(rs.getInt("age"));
+                            return user;
+                        }
+                    });
+                </b>
+                    </code>
+                </pre>
+
+
+            <h3>Extracting Complex Results using <code>ResultSetExtractor</code></h3>
+            <p><strong>ResultSetExtractor</strong> is another interface in Spring, used for processing more complex
+                result sets that may not be easily handled by <code>RowMapper</code>. It is typically used for
+                custom extraction logic, especially when dealing with joins or nested results.</p>
+            <ul>
+                <li>Best suited for cases where the result set has more than one table or complex mappings.</li>
+                <li>Can be used with the <code>query()</code> method in <strong>JdbcTemplate</strong> to extract
+                    complex result sets.</li>
+            </ul>
+            <p><strong>Example:</strong></p>
+
+            <pre>
+                <code>
+                        <b>
+                            String sql = "SELECT u.id, u.name, o.id AS order_id, o.amount " + 
+                                        "FROM users u LEFT JOIN orders o ON u.id = o.user_id";
+
+                            Map&lt;Integer, User&gt; userMap = jdbcTemplate.query(sql, new ResultSetExtractor&lt;Map&lt;Integer, User&gt;&gt;() {
+                                @Override
+                                public Map&lt;Integer, User&gt; extractData(ResultSet rs) throws SQLException {
+                                    Map&lt;Integer, User&gt; map = new HashMap&lt;&gt;();
+                                    while (rs.next()) {
+                                        int userId = rs.getInt("id");
+                                        User user = map.computeIfAbsent(userId, k -> {
+                                            User u = new User();
+                                            u.setId(userId);
+                                            u.setName(rs.getString("name"));
+                                            u.setOrders(new ArrayList&lt;&gt;());
+                                            return u;
+                                        });
+                                        Order order = new Order();
+                                        order.setId(rs.getInt("order_id"));
+                                        order.setAmount(rs.getDouble("amount"));
+                                        user.getOrders().add(order);
+                                    }
+                                    return map;
+                                }
+                            });
+                    </b>
+
+                </code>
+    </pre>
+
+        </section>
+    </main>
+</body>
+
+</html>

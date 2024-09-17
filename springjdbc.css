@@ -48,6 +48,17 @@ h2 {
     margin-bottom: 20px;
 }
 
+h2 a {
+    color: blueviolet;
+    text-decoration: none;
+    /* Optional: removes underline from the link */
+}
+
+h2 a:hover {
+    color: #c70039;
+    /* Optional: color change on hover */
+}
+
 h3 {
     margin-top: 20px;
     margin-bottom: 10px;
@@ -72,12 +83,12 @@ strong {
 }
 
 div {
-    color: black;  
-    font-size: 17pt; 
-    font-variant: small-caps; 
-    text-decoration: dotted; 
-    display: inline-block; 
+    color: black;
+    font-size: 17pt;
+    font-variant: small-caps;
+    text-decoration: dotted;
+    display: inline-block;
     padding: 5px;
-    text-align: center; 
+    text-align: center;
     background-position: center;
 }

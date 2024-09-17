@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Query Execution with JdbcTemplate</title>
+    <link rel="stylesheet" href="springjdbc.css">
+</head>
+
+<body>
+    <header>
+        <h1>SQL Query Execution with JdbcTemplate</h1>
+    </header>
+    <main>
+        <section>
+            <h2>4. SQL Query Execution</h2>
+
+            <h3>Executing Queries with <code>query()</code> and <code>queryForObject()</code></h3>
+            <p><strong>query()</strong> method:</p>
+            <ul>
+                <li>Used for executing SQL queries that return multiple rows.</li>
+                <li>Maps each row to a Java object using a <strong>RowMapper</strong>.</li>
+                <li>Useful for <code>SELECT</code> queries that fetch multiple results.</li>
+            </ul>
+            <p><strong>Example for <code>query()</code>:</strong></p>
+
+            <pre>
+                <code>
+                        String sql = "SELECT id, name, age FROM users";
+                        List&lt;User&gt; users = jdbcTemplate.query(sql, new RowMapper&lt;User&gt;() {
+                            @Override
+                            public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                User user = new User();
+                                user.setId(rs.getInt("id"));
+                                user.setName(rs.getString("name"));
+                                user.setAge(rs.getInt("age"));
+                                return user;
+                            }
+                        });
+                </code>
+            </pre>
+
+            <p><strong>queryForObject()</strong> method:</p>
+            <ul>
+                <li>Used for executing SQL queries that return a single row.</li>
+                <li>Throws exceptions if no rows or multiple rows are returned.</li>
+            </ul>
+            <p><strong>Example for <code>queryForObject()</code>:</strong></p>
+
+            <pre>
+                <code>
+                        String sql = "SELECT name FROM users WHERE id = ?";
+                        String name = jdbcTemplate.queryForObject(sql, new Object[]{1}, String.class);
+                </code>
+            </pre>
+
+        </section>
+
+        <section>
+            <h3>Using <code>update()</code> for DML Operations</h3>
+            <p>The <code>update()</code> method is used for executing <strong>INSERT</strong>, <strong>UPDATE</strong>,
+                and <strong>DELETE</strong> operations.</p>
+            <ul>
+                <li>Returns the number of rows affected by the query.</li>
+            </ul>
+            <p><strong>Example for <code>INSERT</code>:</strong></p>
+
+            <pre>
+                <code>
+                    String sql = "INSERT INTO users (name, age) VALUES (?, ?)";
+                    int result = jdbcTemplate.update(sql, "John Doe", 30);
+                </code>
+            </pre>
+
+            <p><strong>Example for <code>UPDATE</code>:</strong></p>
+
+            <pre>
+                <code>
+                    String sql = "UPDATE users SET name = ? WHERE id = ?";
+                    int result = jdbcTemplate.update(sql, "Jane Doe", 1);
+                </code>
+            </pre>
+
+            <p><strong>Example for <code>DELETE</code>:</strong></p>
+
+            <pre>
+                <code>
+                    String sql = "DELETE FROM users WHERE id = ?";
+                    int result = jdbcTemplate.update(sql, 1);
+                </code>
+            </pre>
+
+        </section>
+    </main>
+</body>
+
+</html>

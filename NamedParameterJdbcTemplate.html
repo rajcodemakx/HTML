@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NamedParameterJdbcTemplate</title>
+    <link rel="stylesheet" href="springjdbc.css">
+</head>
+
+<body>
+    <header>
+        <h1>NamedParameterJdbcTemplate in Spring</h1>
+    </header>
+    <main>
+        <section>
+            <h2>6. NamedParameterJdbcTemplate</h2>
+
+            <h3>Benefits of <code>NamedParameterJdbcTemplate</code></h3>
+            <p><strong>NamedParameterJdbcTemplate</strong> is an extension of Spring's <code>JdbcTemplate</code> that
+                allows the use of named parameters in SQL queries, providing a more readable and maintainable way of
+                writing queries.</p>
+            <ul>
+                <li>Improves readability by avoiding index-based parameters (<code>?</code>), especially for complex
+                    queries.</li>
+                <li>Makes SQL statements easier to maintain by clearly labeling the parameters.</li>
+                <li>Allows parameters to be passed as <strong>Maps</strong> or through a
+                    <strong>SqlParameterSource</strong> (e.g., <code>MapSqlParameterSource</code>).
+                </li>
+                <li>Reduces errors related to parameter ordering.</li>
+            </ul>
+
+            <p><strong>Example:</strong></p>
+
+            <pre>
+                    <code>
+                        <b>
+                        NamedParameterJdbcTemplate namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+
+                        String sql = "SELECT id, name, age FROM users WHERE name = :name AND age = :age";
+
+                        Map&lt;String, Object&gt; params = new HashMap&lt;&gt;();
+                        params.put("name", "John Doe");
+                        params.put("age", 30);
+
+                        List&lt;User&gt; users = namedJdbcTemplate.query(sql, params, new RowMapper&lt;User&gt;() {
+                            @Override
+                            public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                User user = new User();
+                                user.setId(rs.getInt("id"));
+                                user.setName(rs.getString("name"));
+                                user.setAge(rs.getInt("age"));
+                                return user;
+                            }
+                        });
+                        </b>
+                    </code>
+                </pre>
+
+
+            <h3>Named Parameters in SQL Queries</h3>
+            <p>In a traditional <code>JdbcTemplate</code>, placeholders are represented by <code>?</code>, which can
+                become cumbersome when there are many parameters. <code>NamedParameterJdbcTemplate</code> allows using
+                named parameters, improving readability and making the code easier to maintain.</p>
+            <ul>
+                <li>Named parameters are represented with <code>:</code> followed by the parameter name (e.g.,
+                    <code>:name</code>, <code>:age</code>).
+                </li>
+                <li>You can use a <code>Map</code> or a <code>SqlParameterSource</code> to pass these named parameters.
+                </li>
+                <li>This approach makes it easier to handle queries with multiple parameters or complex conditions.</li>
+            </ul>
+            <p><strong>Example:</strong></p>
+
+            <pre>
+                <code>
+                    <b>
+                    String sql = "UPDATE users SET name = :name WHERE id = :id";
+
+                    MapSqlParameterSource params = new MapSqlParameterSource();
+                    params.addValue("name", "Jane Doe");
+                    params.addValue("id", 1);
+
+                    int rowsUpdated = namedJdbcTemplate.update(sql, params);
+                    </b>
+                </code>
+            </pre>
+
+        </section>
+    </main>
+</body>
+
+</html>

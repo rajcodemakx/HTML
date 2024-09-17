@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Management in JdbcTemplate</title>
+    <link rel="stylesheet" href="springjdbc.css">
+</head>
+
+<body>
+    <header>
+        <h1>Transaction Management in JdbcTemplate</h1>
+    </header>
+    <main>
+        <section>
+            <h2>7. Transaction Management</h2>
+
+            <h3>Handling Transactions in <code>JdbcTemplate</code></h3>
+            <p><strong>JdbcTemplate</strong> provides a basic mechanism for handling transactions programmatically.
+                Although it allows for transaction management, doing so manually can be cumbersome and error-prone,
+                requiring careful handling of transaction boundaries.</p>
+            <ul>
+                <li>Transactions can be managed manually using `DataSourceTransactionManager` along with
+                    `TransactionTemplate`.</li>
+                <li>With manual transaction management, you need to explicitly start, commit, or roll back transactions
+                    using the transaction manager.</li>
+            </ul>
+            <p><strong>Example:</strong> In this example, a `TransactionTemplate` is used to define a transaction
+                boundary. The `execute` method handles the transaction, and if an exception occurs, the transaction is
+                automatically rolled back.</p>
+
+            <pre>
+                <code>
+                    TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+
+                    transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+                        @Override
+                        protected void doInTransactionWithoutResult(TransactionStatus status) {
+                            try {
+                                jdbcTemplate.update("INSERT INTO users (name, age) VALUES (?, ?)", "John Doe", 30);
+                                jdbcTemplate.update("UPDATE users SET age = ? WHERE name = ?", 31, "John Doe");
+                            } catch (DataAccessException e) {
+                                // Handle exception, transaction will be rolled back automatically
+                            }
+                        }
+                    });
+                </code>
+            </pre>
+
+
+            <h3>Using Declarative Transaction Management with <code>@Transactional</code></h3>
+            <p><strong>Declarative transaction management</strong> simplifies transaction handling by using annotations.
+                This approach is generally more convenient and less error-prone compared to manual transaction
+                management, as Spring automatically handles transaction boundaries for you.</p>
+            <ul>
+                <li>The <code>@Transactional</code> annotation is applied to methods or classes to specify that they
+                    should be executed within a transaction.</li>
+                <li>Spring manages transaction boundaries automatically, committing or rolling back transactions based
+                    on the success or failure of the annotated methods.</li>
+                <li>Various transaction settings, such as propagation behavior, isolation levels, and rollback rules,
+                    can be configured through the attributes of the <code>@Transactional</code> annotation.</li>
+            </ul>
+            <p><strong>Example:</strong> In this example, the `@Transactional` annotation is used to manage transactions
+                declaratively. The `updateUserAge` method will run within a transaction, and Spring will handle commit
+                or rollback as needed.</p>
+
+            <pre>
+                <code>
+                    @Service
+                    public class UserService {
+
+                        @Autowired
+                        private JdbcTemplate jdbcTemplate;
+
+                        @Transactional
+                        public void updateUserAge(String name, int newAge) {
+                            jdbcTemplate.update("UPDATE users SET age = ? WHERE name = ?", newAge, name);
+                            // Additional operations can be added here
+                        }
+                    }
+                </code>
+            </pre>
+
+        </section>
+    </main>
+</body>
+
+</html>

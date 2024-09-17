@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagination and Sorting with JdbcTemplate</title>
+    <link rel="stylesheet" href="springjdbc.css">
+</head>
+<body>
+    <header>
+        <h1>Pagination and Sorting with JdbcTemplate</h1>
+    </header>
+    <main>
+        <section>
+            <h2>11. Pagination and Sorting</h2>
+
+            <h3>Implementing Pagination and Sorting with <code>JdbcTemplate</code></h3>
+            <p>Pagination and sorting are essential for managing large datasets effectively. Pagination limits the number of records displayed per page, while sorting arranges records according to specified criteria.</p>
+            <p>Here’s how to implement pagination and sorting using <code>JdbcTemplate</code> in a real-time scenario:</p>
+            
+            <h3>Real-Time Sample Code</h3>
+            <p>The following example demonstrates how to fetch a subset of records with pagination and sorting using <code>JdbcTemplate</code> in a Spring Boot application. Assume you have a table called <code>employees</code> with columns <code>id</code>, <code>name</code>, and <code>salary</code>.</p>
+            
+            <pre><code>
+<strong>import org.springframework.jdbc.core.JdbcTemplate;</strong>
+<strong>import org.springframework.jdbc.core.RowMapper;</strong>
+<strong>import org.springframework.beans.factory.annotation.Autowired;</strong>
+<strong>import org.springframework.stereotype.Repository;</strong>
+
+<strong>import java.sql.ResultSet;</strong>
+<strong>import java.sql.SQLException;</strong>
+<strong>import java.util.List;</strong>
+
+<strong>@Repository</strong>
+<strong>public class EmployeeRepository {</strong>
+
+    <strong>@Autowired</strong>
+    <strong>private JdbcTemplate jdbcTemplate;</strong>
+
+    <strong>public List&lt;Employee&gt; findEmployees(int pageNumber, int pageSize, String sortColumn, String sortDirection) {</strong>
+        <strong>String sql = "SELECT * FROM employees ORDER BY " + sortColumn + " " + sortDirection + " LIMIT ? OFFSET ?";</strong>
+        <strong>int offset = (pageNumber - 1) * pageSize;</strong>
+        <strong>return jdbcTemplate.query(sql, new Object[]{pageSize, offset}, new EmployeeRowMapper());</strong>
+    <strong>}</strong>
+
+    <strong>private static final class EmployeeRowMapper implements RowMapper&lt;Employee&gt; {</strong>
+        <strong>@Override</strong>
+        <strong>public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {</strong>
+            <strong>Employee employee = new Employee();</strong>
+            <strong>employee.setId(rs.getInt("id"));</strong>
+            <strong>employee.setName(rs.getString("name"));</strong>
+            <strong>employee.setSalary(rs.getBigDecimal("salary"));</strong>
+            <strong>return employee;</strong>
+        <strong>}</strong>
+    <strong>}</strong>
+
+<strong>}</strong></code></pre>
+
+            <h3>Explanation:</h3>
+            <p><strong>Pagination and Sorting with JdbcTemplate:</strong> In this example, the <code>findEmployees</code> method demonstrates how to implement pagination and sorting. It constructs an SQL query that uses the <code>ORDER BY</code> clause for sorting and <code>LIMIT</code> and <code>OFFSET</code> clauses for pagination.</p>
+            <p>Parameters are used to pass the page size, page number, sorting column, and sorting direction. The <code>EmployeeRowMapper</code> maps the result set to an <code>Employee</code> object. This approach ensures that only the required subset of records is fetched based on the specified pagination and sorting criteria.</p>
+        </section>
+    </main>
+</body>
+</html>

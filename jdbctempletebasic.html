@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>JDBC Template Basics</title>
+    <link rel="stylesheet" href="springjdbc.css">
+    <!-- Linking the provided CSS file -->
+</head>
+
+<body>
+    <!-- Header section with green background and styled text -->
+    <header>
+        <h1>JDBC Template Basics</h1>
+    </header>
+
+    <!-- Main content area -->
+    <main>
+        <!-- Section for content -->
+        <section>
+            <h2><a href="jdbctemplatebasics.html">1. JDBC Template Basics</a></h2>
+            <p><strong>JdbcTemplate</strong> is a powerful and flexible tool that simplifies JDBC code. Below are some
+                of the key methods provided by <code>JdbcTemplate</code>, with links to detailed examples:</p>
+
+            <h3>Methods in JdbcTemplate:</h3>
+
+            <ul>
+                <li><a href="#executeMethod">execute()</a> - Refer to CRUD Operations</li>
+                <li><a href="#updateMethod">update()</a> - Refer to CRUD Operations</li>
+                <li><a href="#queryMethod">query()</a> - Refer to CRUD Operations</li>
+                <li><a href="#queryForObjectMethod">queryForObject()</a> - Refer to CRUD Operations</li>
+                <li><a href="#queryForListMethod">queryForList()</a> - Refer to CRUD Operations</li>
+                <li><a href="#batchUpdateMethod">batchUpdate()</a> - Refer to Batch Processing</li>
+            </ul>
+
+            <h3 id="executeMethod">1. <a href="crudoperations.html#executeMethod">execute()</a></h3>
+            <p>This method is used for executing a SQL statement (DDL or DML) that doesn't return a result set.</p>
+            <pre><code>
+String sql = "CREATE TABLE users (id INT, name VARCHAR(50), email VARCHAR(50))";
+jdbcTemplate.execute(sql);
+            </code></pre>
+
+            <h3 id="updateMethod">2. <a href="crudoperations.html#updateMethod">update()</a></h3>
+            <p>The <code>update()</code> method is used for executing INSERT, UPDATE, or DELETE statements.</p>
+            <pre><code>
+// Insert example
+String sql = "INSERT INTO users (id, name, email) VALUES (?, ?, ?)";
+jdbcTemplate.update(sql, 1, "John Doe", "john@example.com");
+            </code></pre>
+
+            <h3 id="queryMethod">3. <a href="crudoperations.html#queryMethod">query()</a></h3>
+            <p>This method is used to execute a SELECT query and map the result set to an object.</p>
+            <pre><code>
+String sql = "SELECT * FROM users";
+List&lt;User&gt; users = jdbcTemplate.query(sql, new UserRowMapper());
+            </code></pre>
+
+            <h3 id="queryForObjectMethod">4. <a href="crudoperations.html#queryForObjectMethod">queryForObject()</a>
+            </h3>
+            <p>The <code>queryForObject()</code> method is used when you expect a single result from a query.</p>
+            <pre><code>
+String sql = "SELECT name FROM users WHERE id = ?";
+String name = jdbcTemplate.queryForObject(sql, new Object[]{1}, String.class);
+            </code></pre>
+
+            <h3 id="batchUpdateMethod">5. <a href="batchprocessing.html#batchUpdateMethod">batchUpdate()</a></h3>
+            <p>The <code>batchUpdate()</code> method allows executing a batch of SQL statements efficiently.</p>
+            <pre><code>
+String sql = "INSERT INTO users (id, name, email) VALUES (?, ?, ?)";
+List&lt;Object[]&gt; batchArgs = new ArrayList&lt;&gt;();
+batchArgs.add(new Object[]{1, "John", "john@example.com"});
+batchArgs.add(new Object[]{2, "Jane", "jane@example.com"});
+batchArgs.add(new Object[]{3, "Doe", "doe@example.com"});
+jdbcTemplate.batchUpdate(sql, batchArgs);
+            </code></pre>
+        </section>
+    </main>
+</body>
+
+</html>

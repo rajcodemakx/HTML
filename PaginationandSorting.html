@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagination and Sorting with JdbcTemplate</title>
+    <link rel="stylesheet" href="springjdbc.css">
+</head>
+
+<body>
+    <header>
+        <h1>Pagination and Sorting with JdbcTemplate</h1>
+    </header>
+    <main>
+        <section>
+            <h2>11. Pagination and Sorting</h2>
+
+            <h3>Implementing Pagination and Sorting with <code>JdbcTemplate</code></h3>
+            <p>Pagination and sorting are essential features for managing large datasets. Pagination allows you to
+                display a subset of records on each page, while sorting helps to organize the data according to specific
+                criteria.</p>
+            <p>With <code>JdbcTemplate</code>, you can implement pagination and sorting by using SQL queries with
+                appropriate clauses for offset, limit, and order. Here’s how you can achieve this:</p>
+            <ul>
+                <li><strong>Pagination:</strong> Use SQL's <code>LIMIT</code> and <code>OFFSET</code> clauses to fetch a
+                    subset of records. For example, you can fetch records for a specific page by calculating the offset
+                    based on the page number and page size.</li>
+                <li><strong>Sorting:</strong> Use SQL's <code>ORDER BY</code> clause to sort the results based on one or
+                    more columns. You can specify the sort direction (ascending or descending) to control the order of
+                    the results.</li>
+            </ul>
+            <p><strong>Example:</strong> The following example demonstrates how to implement pagination and sorting
+                using <code>JdbcTemplate</code>.</p>
+            <pre>
+                <code>
+                    <strong>int pageSize = 10;</strong>
+                    <strong>int pageNumber = 2;</strong>
+                    <strong>String sortColumn = "name";</strong>
+                    <strong>String sortDirection = "ASC";</strong>
+
+                    <strong>String sql = "SELECT * FROM users ORDER BY " + sortColumn + " " + sortDirection + " LIMIT ? OFFSET ?";</strong>
+                    <strong>List&lt;User&gt; users = jdbcTemplate.query(sql, new Object[]{pageSize, (pageNumber - 1) * pageSize}, new UserRowMapper());</strong>
+                </code>
+            </pre>
+
+            <h3>Explanation:</h3>
+            <p><strong>Implementing Pagination and Sorting with JdbcTemplate:</strong> This section explains how to use
+                <code>JdbcTemplate</code> for pagination and sorting. It covers constructing SQL queries with
+                <code>LIMIT</code>, <code>OFFSET</code>, and <code>ORDER BY</code> clauses to fetch and organize data
+                efficiently. The example demonstrates how to calculate the offset and limit for pagination and apply
+                sorting based on a specified column and direction.</p>
+            <h3><a href="PaginationSampleCode.html">Real-Time Sample Code</a></h3>
+        </section>
+    </main>
+</body>
+
+</html>

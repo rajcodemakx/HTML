@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Handling with JdbcTemplate</title>
+    <link rel="stylesheet" href="springjdbc.css">
+</head>
+
+<body>
+    <header>
+        <h1>Error Handling with JdbcTemplate</h1>
+    </header>
+    <main>
+        <section>
+            <h2>9. Error Handling</h2>
+
+            <h3>Handling SQL Exceptions</h3>
+            <p>When working with databases, exceptions can occur due to various reasons such as connection issues, SQL
+                syntax errors, or data integrity violations. Handling these exceptions appropriately is crucial for
+                maintaining the stability and reliability of your application.</p>
+            <ul>
+                <li><strong>SQLExceptions:</strong> SQLExceptions are the standard way of handling SQL-related errors in
+                    Java. When using <code>JdbcTemplate</code>, you may encounter SQLExceptions that need to be managed
+                    effectively.</li>
+                <li><strong>Exception Handling with JdbcTemplate:</strong> <code>JdbcTemplate</code> simplifies
+                    exception handling by translating SQLExceptions into Spring's DataAccessException hierarchy.</li>
+            </ul>
+            <p><strong>Example:</strong> Here's how you might handle exceptions in a method that uses
+                <code>JdbcTemplate</code> for database operations.
+            </p>
+            <pre>
+                <code>
+                    <strong>try {</strong>
+                        <strong>jdbcTemplate.update("INSERT INTO users (name, age) VALUES (?, ?)", "Alice", 30);</strong>
+                    <strong>} catch (DataAccessException e) {</strong>
+                        <strong>System.err.println("Error during database operation: " + e.getMessage());</strong>
+                    <strong>}</strong>
+                </code>
+            </pre>
+
+            <h3>Spring's <code>DataAccessException</code> Hierarchy</h3>
+            <p>Spring provides a consistent exception hierarchy to handle data access issues across different database
+                technologies. This hierarchy abstracts the underlying JDBC exceptions and provides a more general
+                interface for exception handling.</p>
+            <ul>
+                <li><strong>DataAccessException:</strong> The base class for all exceptions related to data access in
+                    Spring. It provides methods to get details about the exception.</li>
+                <li><strong>DataAccessResourceFailureException:</strong> Indicates a failure in resource access, such as
+                    database connectivity issues.</li>
+                <li><strong>DataIntegrityViolationException:</strong> Thrown when a data integrity violation occurs,
+                    such as a constraint violation.</li>
+                <li><strong>DuplicateKeyException:</strong> Indicates that a unique constraint was violated, such as a
+                    duplicate key in a unique index.</li>
+                <li><strong>EmptyResultDataAccessException:</strong> Thrown when a query returns no results when at
+                    least one result was expected.</li>
+                <li><strong>IncorrectResultSizeDataAccessException:</strong> Indicates that a query returned the wrong
+                    number of results.</li>
+            </ul>
+            <p><strong>Example:</strong> Here's an example of handling a specific <code>DataAccessException</code> type.
+            </p>
+            <pre>
+                <code>
+                    <strong>try {</strong>
+                        <strong>jdbcTemplate.queryForObject("SELECT age FROM users WHERE name = ?", Integer.class, "Bob");</strong>
+                    <strong>} catch (EmptyResultDataAccessException e) {</strong>
+                        <strong>System.err.println("No user found with the specified name: " + e.getMessage());</strong>
+                    <strong>} catch (DataAccessException e) {</strong>
+                        <strong>System.err.println("General data access error: " + e.getMessage());</strong>
+                    <strong>}</strong>
+                </code>
+            </pre>
+
+            <h3>Explanation:</h3>
+            <p><strong>Handling SQL Exceptions:</strong> This section explains the general approach to handling SQL
+                exceptions when using <code>JdbcTemplate</code>. It highlights that <code>JdbcTemplate</code> translates
+                SQLExceptions into Spring's <code>DataAccessException</code> hierarchy, simplifying error management.
+            </p>
+            <p><strong>Spring's DataAccessException Hierarchy:</strong> Describes the hierarchy of exceptions provided
+                by Spring for data access issues, including <code>DataAccessException</code> and its subclasses. It
+                provides a consistent way to handle various data access errors across different databases.</p>
+        </section>
+    </main>
+</body>
+
+</html>

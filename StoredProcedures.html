@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stored Procedures with JdbcTemplate</title>
+    <link rel="stylesheet" href="springjdbc.css">
+</head>
+
+<body>
+    <header>
+        <h1>Stored Procedures with JdbcTemplate</h1>
+    </header>
+    <main>
+        <section>
+            <h2>10. Stored Procedures</h2>
+
+            <h3>Executing Stored Procedures with <code>SimpleJdbcCall</code></h3>
+            <p>Stored procedures are a powerful feature of SQL databases that allow you to encapsulate complex logic
+                within the database itself. They can improve performance and provide a way to execute reusable SQL code.
+            </p>
+            <p>In Spring, you can execute stored procedures using the <code>SimpleJdbcCall</code> class, which provides
+                a straightforward way to call stored procedures and handle the results.</p>
+            <ul>
+                <li><strong>SimpleJdbcCall:</strong> This class simplifies the interaction with stored procedures by
+                    abstracting the underlying JDBC calls and providing a more intuitive API for calling stored
+                    procedures.</li>
+                <li><strong>Configuration:</strong> To use <code>SimpleJdbcCall</code>, you need to configure it with
+                    the <code>DataSource</code> and specify the stored procedure name.</li>
+            </ul>
+            <p><strong>Example:</strong> The following example demonstrates how to configure and execute a stored
+                procedure using <code>SimpleJdbcCall</code>.</p>
+            <pre>
+                <code>
+                    <strong>import org.springframework.jdbc.core.namedparam.SimpleJdbcCall;</strong>
+                    <strong>import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;</strong>
+
+                    <strong>SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)</strong>
+                    <strong>    .withProcedureName("my_stored_procedure");</strong>
+
+                    <strong>MapSqlParameterSource inParams = new MapSqlParameterSource();</strong>
+                    <strong>inParams.addValue("param1", value1);</strong>
+                    <strong>inParams.addValue("param2", value2);</strong>
+
+                    <strong>Map&lt;String, Object&gt; result = jdbcCall.execute(inParams);</strong>
+                    <strong>Object outputParam = result.get("output_param");</strong>
+                </code>
+            </pre>
+
+            <h3>Explanation:</h3>
+            <p><strong>Executing Stored Procedures with SimpleJdbcCall:</strong> This section explains how to use
+                <code>SimpleJdbcCall</code> to execute stored procedures. It highlights the configuration of
+                <code>SimpleJdbcCall</code> with the <code>DataSource</code> and demonstrates how to pass input
+                parameters and retrieve output values.
+            </p>
+        </section>
+    </main>
+</body>
+
+</html>
